@@ -32,3 +32,6 @@ tools/
 
 # Vite cache (optional, safe to ignore)
 .vite/
+
+# Secret files
+.env
