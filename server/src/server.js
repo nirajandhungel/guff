@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
+import dbConfig from "./config/db.config.js";
 const app = express();
 
 
@@ -15,6 +16,8 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.json());
+
+dbConfig();
 
 app.use("/api/auth",authRoutes);
 
