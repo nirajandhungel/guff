@@ -14,8 +14,8 @@ app.use(cors({
     credentials:true, // allow cookies
 
 }));
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
 
 dbConfig();
 
