@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
 import dbConfig from "./config/db.config.js";
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 dbConfig();
 
 app.use("/api/auth",authRoutes);
+app.use("/api/message",messageRoutes);
 
 app.listen(process.env.PORT || 5000,()=>{
     console.log(`Server is running on port ${process.env.PORT}`);
