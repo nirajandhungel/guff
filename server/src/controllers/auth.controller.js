@@ -86,10 +86,13 @@ export const logout = async (req, res)=> {
 
 export const updateProfile = async (req, res)=> {
     try{
-    
-    return res.status(200).json({message:"Successfully Logout"});
+        const {profileImage} = req.body;
+        const userId = req.user._id;
+        const uploadResponse = await cloudinary.uploader.upload(profileImage);
+        const updateUser = await User.findByIdAndUpdate(userId, {profilePic:uploadResponse.secure_url},{new:true})
+        res.status(200).json(updateUser);
 }catch(err){
-    console.log("Error in logout", err)
+    console.log("Error in update profile", err)
     return res.status(500).json({message:"Internal Server Error"});
 
 }
