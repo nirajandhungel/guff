@@ -13,7 +13,8 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      window.location.href = "/login"; // redirect if unauthorized
+      // reject, don't reload the page
+      console.warn("Unauthorized, user is not logged in");
     } else {
       console.error("API error:", error.response?.data || error.message);
     }
