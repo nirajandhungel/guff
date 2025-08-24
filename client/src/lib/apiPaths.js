@@ -1,8 +1,9 @@
-export const BASE_URL = import.meta.env.BASE_URL
-
 export const API_PATHS ={
     AUTH:{
-
+        LOGIN:`/auth/login`,
+        SIGNUP:`/auth/signup`,
+        CHECK_AUTH:`/auth/check-auth`,
+        LOGOUT:`/auth/logout`,
     },
     
 }

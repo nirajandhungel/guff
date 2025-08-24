@@ -6,7 +6,16 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+import { useAuthStore } from './store/useAuthStore';
 const App = () => {
+
+  const {authUser, checkAuth} = useAuthStore();
+
+  React.useEffect(()=>{
+    checkAuth()
+
+  },[checkAuth]);
+  console.log(authUser);
   return (
     <div className='text-red-600'>
       hello
