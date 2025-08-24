@@ -25,7 +25,6 @@ const App = () => {
   } 
   return (
     <div className=''>
-      hello
       <Navbar/>
       <Routes>
         <Route path ="/" element={<Home/>}/>
