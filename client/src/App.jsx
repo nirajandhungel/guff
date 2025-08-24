@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import { useAuthStore } from './store/useAuthStore';
+import { Toaster } from 'react-hot-toast';
 const App = () => {
 
   const {authUser, checkAuth, isCheckingAuth} = useAuthStore();
@@ -34,6 +35,7 @@ const App = () => {
         <Route path ="/profile" element={authUser?<Profile/>:<Navigate to = "/login"/>}/>
 
       </Routes>
+      <Toaster position="top-right"/>
 
       
       
