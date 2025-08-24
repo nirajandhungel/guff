@@ -1,8 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MessageSquare, User, Mail, EyeOff, Eye, Lock, Loader2 } from "lucide-react";
+import {
+  MessageSquare,
+  User,
+  Mail,
+  EyeOff,
+  Eye,
+  Lock,
+  Loader2,
+} from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
+import toast from "react-hot-toast";
 const SignUp = () => {
   const { isSigningUp, signUp } = useAuthStore();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -13,14 +22,49 @@ const SignUp = () => {
   });
 
   const validateForm = () => {
-    // Add form validation logic here
+    //required fields validation
+    if (
+      !formData.fullName.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim()
+    ) {
+      toast.error("All fields are required.");
+      return false;
+    }
+
+    //name validation
+    if (
+      formData.fullName.trim().length < 3 ||
+      !formData.fullName.includes(" ")
+    ) {
+      toast.error("Invalid name");
+      return false;
+    }
+
+    //email validation
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Invalid email format");
+      return false;
+    }
+
+    //password validation
+
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return false;
+    }
+
     return true;
   };
 
   const handleSubmit = (e) => {
     // handle submit form logics
     e.preventDefault(); //prevents the default browser behaviour (page reload on form submit).
-    if (!validateForm()) return;
+    if (validateForm()) {
+      signUp(formData);
+    }
   };
 
   return (
@@ -42,9 +86,7 @@ const SignUp = () => {
             </div>
           </div>
 
-
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <div className="form-control">
               <label htmlFor="Full Name" className="label">
                 <span className="label-text font-medium">Full Name</span>
@@ -105,41 +147,51 @@ const SignUp = () => {
                     setFormData({ ...formData, password: e.target.value })
                   }
                 />
-                <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center z-20"
-                onClick={()=>setShowPassword(!showPassword)}>
-                  {showPassword?(<EyeOff className="size-5 text-base-content/40"/>):(<Eye className="size-5 text-base-content/40"/>)}
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center z-20"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-5 text-base-content/40" />
+                  ) : (
+                    <Eye className="size-5 text-base-content/40" />
+                  )}
                 </button>
               </div>
             </div>
-            
-            <button type = "submit" className="btn btn-primary w-full" disabled={isSigningUp}> 
-              {
-                isSigningUp?(
+
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={isSigningUp}
+            >
+              {isSigningUp ? (
                 <>
-                <Loader2 className="size-5 animate-spin"/>
-                Loading...
+                  <Loader2 className="size-5 animate-spin" />
+                  Loading...
                 </>
-                ):(
-                  "Create Account"
-                )}
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
 
           <div className="text-center">
             <p className="text-base-content/60" />
             Already have an account ?{" "}
-                <Link to="/login" className=" link link-primary no-underline ">Log In</Link>
+            <Link to="/login" className=" link link-primary no-underline ">
+              Log In
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Right Side */}
-                <AuthImagePattern
-                title = "Join our community"
-                subtitle="Connect with friends, share moments and stay in touch with your loved ones."
-
-                
-                />
+      <AuthImagePattern
+        title="Join our community"
+        subtitle="Connect with friends, share moments and stay in touch with your loved ones."
+      />
     </div>
   );
 };
