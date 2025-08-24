@@ -1,4 +1,5 @@
 import React from 'react'
+import { Loader } from 'lucide-react';
 import Navbar from './components/Navbar';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -9,13 +10,19 @@ import Profile from './pages/Profile';
 import { useAuthStore } from './store/useAuthStore';
 const App = () => {
 
-  const {authUser, checkAuth} = useAuthStore();
+  const {authUser, checkAuth, isCheckingAuth} = useAuthStore();
 
   React.useEffect(()=>{
     checkAuth()
 
   },[checkAuth]);
   console.log(authUser);
+
+  if(isCheckingAuth && !authUser){
+    return <div className='flex items-center justify-center h-screen'>
+      <Loader className="size-10 animate-spin"></Loader>
+    </div>
+  } 
   return (
     <div className='text-red-600'>
       hello
