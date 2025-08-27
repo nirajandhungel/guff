@@ -1,7 +1,7 @@
-import { configDotenv } from "dotenv";
-configDotenv();
-
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
+
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
