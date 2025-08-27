@@ -4,6 +4,7 @@ export const API_PATHS ={
         SIGN_UP:`/auth/signup`,
         CHECK_AUTH:`/auth/check-auth`,
         LOGOUT:`/auth/logout`,
+        UPDATE_PROFILE:`/auth/update-profile`,
     },
     
 }
