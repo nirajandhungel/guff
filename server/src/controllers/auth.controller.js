@@ -1,5 +1,6 @@
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
+import cloudinary from "../config/cloudinary.config.js";
 
 export const signup = async (req, res)=> {
 
@@ -84,20 +85,64 @@ export const logout = async (req, res)=> {
 
 }
 
-export const updateProfile = async (req, res)=> {
-    try{
-        const {profileImage} = req.body;
-        const userId = req.user._id;
-        const uploadResponse = await cloudinary.uploader.upload(profileImage);
-        const updateUser = await User.findByIdAndUpdate(userId, {profilePic:uploadResponse.secure_url},{new:true})
-        res.status(200).json(updateUser);
-}catch(err){
-    console.log("Error in update profile", err)
-    return res.status(500).json({message:"Internal Server Error"});
 
-}
+export const updateProfile = async (req, res) => {
+  try {
+    const file = req.file;
+    const userId = req.user._id;
 
-}
+    if (!file) return res.status(400).json({ message: "No file uploaded" });
+
+        // Validate file type
+    if (!file.mimetype.startsWith('image/')) {
+      return res.status(400).json({ message: "Please upload an image file" });
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      return res.status(400).json({ message: "File size should be less than 5MB" });
+    }
+
+       // Upload image to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: "Guff/Users",
+          resource_type: "image",
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(file.buffer);
+    });
+
+    // Update user in DB
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profileImageURL: result.secure_url,
+        profileImagePublicId: result.public_id,
+      },
+      {
+        new: true,
+        select: "-password", // exclude password
+      }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error in update profile:", err);
+    return res.status(500).json({ 
+      message: "Internal Server Error", 
+      error: err.message 
+    });
+  }
+};
 
 // Auth check controller
 
