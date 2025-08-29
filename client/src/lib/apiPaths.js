@@ -6,5 +6,10 @@ export const API_PATHS ={
         LOGOUT:`/auth/logout`,
         UPDATE_PROFILE:`/auth/update-profile`,
     },
+    MESSAGES:{
+        GET_USERS:`/messages/users`,
+        GET_MESSAGES:(id)=>`/messages/${id}`,
+        SEND_MESSAGE:(id)=>`/messages/send/${id}`,
+    }
     
 }
