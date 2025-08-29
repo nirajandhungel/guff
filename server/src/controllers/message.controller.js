@@ -9,7 +9,7 @@ export const getUsersForSidebar = async (req, res) => {
     }).select("-password");
     return res
       .status(200)
-      .json({ message: "Successfullly fetched other users" });
+      .json({ message: "Successfullly fetched other users", users: filteredUsers });
   } catch (err) {
     console.log("error in message controller", err);
     return res.status(500).json({ message: "Internal sever error" });

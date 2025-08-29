@@ -21,7 +21,7 @@ app.use(cookieParser());
 dbConfig();
 
 app.use("/api/auth",authRoutes);
-app.use("/api/message",messageRoutes);
+app.use("/api/messages",messageRoutes);
 
 app.listen(process.env.PORT || 5000,()=>{
     console.log(`Server is running on port ${process.env.PORT}`);
