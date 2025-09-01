@@ -1,5 +1,7 @@
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
+import cloudinary from "../config/cloudinary.config.js";
+
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -28,8 +30,8 @@ export const getMessages = async (req, res) => {
       ],
     })
       .sort({ createdAt: 1 })
-      .populate("senderId", "fullName email profileImageUrl ")
-      .populate("receiverId", "fullName email profileImageUrl ");
+      .populate("senderId", "fullName email profileImageURL")
+      .populate("receiverId", "fullName email profileImageURL");
 
     return res
       .status(200)
@@ -47,6 +49,12 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user._id;
     let imageUrl;
 
+    // Debugging logs
+     console.log('Request body:', { message, image: image ? 'present' : 'not present' });
+    console.log('Receiver ID:', receiverId);
+    console.log('Sender ID:', senderId);
+
+
     // validation
     if (!message && !image) {
       return res.status(400).json({ message: "Message or image is required" });
@@ -62,16 +70,17 @@ export const sendMessage = async (req, res) => {
     const newMessage = new Message({
       senderId,
       receiverId,
-      message,
+      message: message || "",
       image: imageUrl,
     });
     await newMessage.save();
+     const populatedMessage = await newMessage.populate(
+      "senderId receiverId",
+      "fullName email profileImageURL"
+    );
 
     // todo: real time functionality =>socket.io
-    return res.status(201).json({
-      message,
-      imageUrl,
-    });
+    return res.status(201).json({message:populatedMessage});
   } catch (err) {
     console.log("Error in send message", err);
     return res.status(500).json({ message: "Internal Server Error " });
