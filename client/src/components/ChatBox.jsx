@@ -48,7 +48,7 @@ const ChatBox = () => {
             <div className="chat-header mb-1 mt-3">
               <time className="text-xs opacity-50 ml-1">{formatMessageTimestamp(chat.createdAt)}</time>
             </div>
-            <div className="chat-bubble flex">
+            <div className="chat-bubble flex flex-col">
               {chat.image && 
               <img src={chat.image} alt="Attachement" className = "sm:max-w-[200px] rounded-md mb-2" />}
               {chat.text && <p>{chat.text}</p> }
