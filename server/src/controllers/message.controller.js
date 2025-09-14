@@ -1,6 +1,7 @@
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import cloudinary from "../config/cloudinary.config.js";
+import mongoose from "mongoose";
 
 
 export const getUsersForSidebar = async (req, res) => {
@@ -23,24 +24,28 @@ export const getMessages = async (req, res) => {
     const { id: IdOfUserToChat } = req.params;
     const myId = req.user._id;
 
+
+
     const messages = await Message.find({
       $or: [
-        { senderId: myId, receiverId: IdOfUserToChat }, // Messages sent by current user
-        { senderId: IdOfUserToChat, receiverId: myId }, // Messages received by current user
+        { senderId: myId, receiverId: IdOfUserToChat }, // use raw string comparison
+        { senderId: IdOfUserToChat, receiverId: myId },
       ],
     })
       .sort({ createdAt: 1 })
       .populate("senderId", "fullName email profileImageURL")
       .populate("receiverId", "fullName email profileImageURL");
 
+
     return res
       .status(200)
-      .json({ message: "Successfully fetched messages !", messages });
+      .json({ message: "Successfully fetched messages!", messages });
   } catch (err) {
-    console.log("Error in get Messages", err);
-    return res.status(500).json({ message: "Internal Server Error " });
+    console.error("Error in getMessages:", err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export const sendMessage = async (req, res) => {
   try {
@@ -80,7 +85,9 @@ export const sendMessage = async (req, res) => {
     );
 
     // todo: real time functionality =>socket.io
-    return res.status(201).json({message:populatedMessage});
+    // return res.status(201).json({message:populatedMessage});
+       return res.status(201).json({ message: "Message sent successfully", message: populatedMessage });
+
   } catch (err) {
     console.log("Error in send message", err);
     return res.status(500).json({ message: "Internal Server Error " });
