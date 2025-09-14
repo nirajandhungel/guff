@@ -46,7 +46,9 @@ export const useChatStore = create((set, get) => ({
         API_PATHS.MESSAGES.SEND_MESSAGE(selectedUser._id),
         messageData
       );
-      set({ chats: [...chats, res.data.message] });
+          // Update this line to access the correct property from response
+   const newMessage = res.data.message;
+    set({ chats: [...chats, newMessage] });
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "Failed to send the message");
